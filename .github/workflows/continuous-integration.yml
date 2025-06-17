@@ -56,6 +56,7 @@ jobs:
         run: |
           env GLPI_ENVIRONMENT_TYPE=testing bash --noprofile --norc ${{ inputs.init-script }}
       - name: "Configure cache directories"
+        if: ${{ !cancelled() }}
         # Use default `bash` shell with `github-actions-runner` user
         shell: "bash"
         run: |
@@ -65,6 +66,7 @@ jobs:
           npm config set cache "${{ env.CACHE_DIR }}/npm"
           composer config cache-dir "${{ env.CACHE_DIR }}/composer"
       - name: "Restore cache"
+        if: ${{ !cancelled() }}
         uses: "actions/cache@v4"
         with:
           path: |
@@ -75,6 +77,7 @@ jobs:
             ${{ inputs.plugin-key }}-dependencies-${{ inputs.php-version }}-
             ${{ inputs.plugin-key }}-dependencies-
       - name: "Fix directories ACL"
+        if: ${{ !cancelled() }}
         # Use default `bash` shell with `github-actions-runner` user
         shell: "bash"
         run: |
@@ -133,8 +136,8 @@ jobs:
           bin/console plugin:install --ansi --no-interaction --username=glpi ${{ inputs.plugin-key }}
           bin/console plugin:activate --ansi --no-interaction ${{ inputs.plugin-key }}
       - name: "Run apache"
-        # Use default `bash` shell with `github-actions-runner` user
         if: ${{ !cancelled() }}
+        # Use default `bash` shell with `github-actions-runner` user
         shell: "bash"
         run: |
           sudo service apache2 start
