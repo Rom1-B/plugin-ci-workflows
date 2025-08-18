@@ -147,7 +147,14 @@ jobs:
         if: ${{ !cancelled() && hashFiles(format('{0}/psalm.xml', inputs.plugin-key)) != '' }}
         run: |
           echo -e "\033[0;33mExecuting Psalm...\033[0m"
-          php ../../vendor/bin/psalm --long-progress --output-format=github
+          if [[ -f "vendor/bin/psalm" ]]; then
+            vendor/bin/psalm --long-progress --output-format=github
+          elif [[ -f "../../vendor/bin/psalm" ]]; then
+            ../../vendor/bin/psalm --long-progress --output-format=github
+          else
+            echo -e "\033[0;31mPsalm binary not found!\033[0m"
+            exit 1
+          fi
       - name: "Rector"
         if: ${{ !cancelled() && hashFiles(format('{0}/rector.php', inputs.plugin-key)) != '' }}
         run: |
@@ -215,7 +222,14 @@ jobs:
         if: ${{ !cancelled() && hashFiles(format('{0}/phpunit.xml', inputs.plugin-key)) != '' }}
         run: |
           echo -e "\033[0;33mExecuting PHPUnit...\033[0m"
-          php ../../vendor/bin/phpunit --colors=always
+          if [[ -f "vendor/bin/phpunit" ]]; then
+            vendor/bin/phpunit --colors=always
+          elif [[ -f "../../vendor/bin/phpunit" ]]; then
+            ../../vendor/bin/phpunit --colors=always
+          else
+            echo -e "\033[0;31mPHPUnit binary not found!\033[0m"
+            exit 1
+          fi
       - name: "Jest"
         if: ${{ !cancelled() && hashFiles(format('{0}/jest.config.js', inputs.plugin-key)) != '' }}
         run: |
