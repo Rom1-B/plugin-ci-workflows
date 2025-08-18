@@ -21,6 +21,11 @@ This workflow will execute the following actions as long as they are available o
 
 During the `PHPUnit` tests execution, GLPI will be accessible over HTTP (`http://localhost/`).
 
+### Note on Binary Dependencies
+
+If the required binaries are not installed within the plugin repository, the CI workflow will attempt to use the binaries provided by GLPI directly.
+
+
 ```yaml
 name: "Continuous integration"
 
