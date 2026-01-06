@@ -108,6 +108,10 @@ jobs:
       - name: "Check for common dependencies"
         if: ${{ !cancelled() && hashFiles(format('{0}/composer.json', inputs.plugin-key)) != '' }}
         run: |
+          if [[ ! command -v jq &> /dev/null ]]; then
+            echo -e "\033[0;33mInstalling 'jq'...\033[0m"
+            sudo apt update && sudo apt install -y jq
+          fi
           echo -e "\033[0;33mChecking for common dependencies between plugin and core...\033[0m"
           PLUGIN_DEPS=$(composer show --direct --format=json | jq -r '.installed[] | .name')
           CORE_DEPS=$(cd ../../ && composer show --direct --format=json | jq -r '.installed[] | .name')
